@@ -1,3 +1,5 @@
+USE universidad;
+
 /*1. Retorna un llistat amb el primer cognom, segon cognom i el nom de tots els/les alumnes. 
 El llistat haurà d'estar ordenat alfabèticament de menor a major pel primer cognom, segon cognom i nom.*/
 SELECT apellido1, apellido2, nombre FROM persona WHERE tipo= 'alumno' ORDER BY apellido1, apellido2, nombre;
@@ -70,7 +72,7 @@ SELECT g.nombre AS grado, COUNT(a.id) AS numero_asignaturas FROM grado g LEFT JO
 SELECT g.nombre AS grado, COUNT(a.id) AS numero_asignaturas FROM grado g LEFT JOIN asignatura a ON g.id = a.id_grado GROUP BY g.nombre HAVING COUNT(a.id) > 40 ORDER BY numero_asignaturas DESC;
 
 -- 7. Retorna un llistat que mostri el nom dels graus i la suma del nombre total de crèdits que hi ha per a cada tipus d'assignatura. El resultat ha de tenir tres columnes: nom del grau, tipus d'assignatura i la suma dels crèdits de totes les assignatures que hi ha d'aquest tipus.
-SELECT g.nombre AS grado, a.tipo AS tipos_asignatura, SUM(a.creditos) AS suma_creditos FROM grado g JOIN asignatura a ON pa.id_asignatura = a.id_asignatura JOIN grado g ON a.id_grado = g.id_grado WHERE g.nombre = 'Grau en Enginyeria Informàtica (Pla 2015)';
+SELECT g.nombre AS grado, a.tipo AS tipos_asignatura, SUM(a.creditos) AS suma_creditos FROM grado g LEFT JOIN asignatura a ON g.id = a.id_grado GROUP by g.nombre, a.tipo ORDER by g.nombre ASC;
 
 -- 8. Retorna un llistat que mostri quants alumnes s'han matriculat d'alguna assignatura en cadascun dels cursos escolars. El resultat haurà de mostrar dues columnes, una columna amb l'any d'inici del curs escolar i una altra amb el nombre d'alumnes matriculats.
 SELECT ce.anyo_inicio AS anyo_inicio, COUNT(DISTINCT am.id_alumno) AS numero_alumnos FROM curso_escolar ce JOIN alumno_se_matricula_asignatura am ON ce.id = am.id_curso_escolar GROUP BY ce.anyo_inicio ORDER BY ce.anyo_inicio;
@@ -83,4 +85,3 @@ SELECT * FROM persona WHERE tipo = 'alumno' ORDER BY fecha_nacimiento DESC LIMIT
 
 -- 11. Retorna un llistat amb els professors/es que tenen un departament associat i que no imparteixen cap assignatura.
 SELECT p.id, p.nombre, p.apellido1, p.apellido2, d.nombre AS departamento FROM persona p JOIN profesor prof ON p.id = prof.id_profesor JOIN departamento d ON prof.id_departamento = d.id LEFT JOIN asignatura a ON prof.id_profesor = a.id_profesor WHERE p.tipo = 'profesor' AND a.id IS NULL; 
-
